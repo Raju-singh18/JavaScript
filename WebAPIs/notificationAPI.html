@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notification API</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(
+                135deg,
+                #667eea,
+                #764ba2
+            );
+        }
+
+        .container {
+            width: 400px;
+            padding: 30px;
+
+            background: white;
+            border-radius: 20px;
+
+            text-align: center;
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+
+            margin-top: 10px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #667eea;
+            color: white;
+
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d9;
+        }
+
+        .notify-btn {
+            background: #764ba2;
+        }
+
+        .notify-btn:hover {
+            background: #653c8e;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="icon">🔔</div>
+
+        <h1>Notification API</h1>
+
+        <p>
+            Allow notifications and receive a browser notification.
+        </p>
+
+        <button id="permissionBtn">
+            🔐 Request Permission
+        </button>
+
+        <button id="notifyBtn" class="notify-btn">
+            🔔 Show Notification
+        </button>
+
+        <p id="status"></p>
+
+    </div>
+
+
+    <script>
+
+        const permissionBtn =
+            document.getElementById("permissionBtn");
+
+        const notifyBtn =
+            document.getElementById("notifyBtn");
+
+        const status =
+            document.getElementById("status");
+
+
+        // =====================================
+        // REQUEST NOTIFICATION PERMISSION
+        // =====================================
+
+        permissionBtn.addEventListener("click", async function () {
+
+            // Check browser support
+
+            if (!("Notification" in window)) {
+
+                status.textContent =
+                    "❌ Notifications are not supported.";
+
+                return;
+            }
+
+
+            // Request permission
+
+            const permission =
+                await Notification.requestPermission();
+
+
+            if (permission === "granted") {
+
+                status.textContent =
+                    "✅ Notification permission granted.";
+
+            }
+
+            else if (permission === "denied") {
+
+                status.textContent =
+                    "❌ Notification permission denied.";
+
+            }
+
+            else {
+
+                status.textContent =
+                    "⚠️ Notification permission dismissed.";
+
+            }
+
+        });
+
+
+        // =====================================
+        // SHOW NOTIFICATION
+        // =====================================
+
+        notifyBtn.addEventListener("click", function () {
+
+            if (!("Notification" in window)) {
+
+                status.textContent =
+                    "❌ Notifications are not supported.";
+
+                return;
+            }
+
+
+            if (Notification.permission === "granted") {
+
+                new Notification(
+                    "Hello Raju! 👋",
+                    {
+                        body: "Welcome to the Notification API!",
+                        icon: "https://cdn-icons-png.flaticon.com/512/1827/1827272.png"
+                    }
+                );
+
+
+                status.textContent =
+                    "✅ Notification sent!";
+
+            }
+
+            else if (Notification.permission === "default") {
+
+                status.textContent =
+                    "⚠️ Please allow notification permission first.";
+
+            }
+
+            else {
+
+                status.textContent =
+                    "❌ Notifications are blocked.";
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,270 @@
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        navigator.geolocation.getCurrentPosition((position)=>{
+            console.log("Latitude: "+ position.coords.longitude);
+            console.log("Longitude: "+ position.coords.longitude);
+        })
+    </script>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Geolocation API</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .container {
+            width: 380px;
+            padding: 30px;
+            text-align: center;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: #667eea;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d9;
+        }
+
+        .location-card {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #f5f6ff;
+            border-radius: 12px;
+        }
+
+        .location-card div {
+            margin: 12px 0;
+            font-size: 16px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .value {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        #status {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="icon">📍</div>
+
+        <h1>My Location</h1>
+
+        <p>
+            Click the button to find your current location.
+        </p>
+
+        <button id="locationBtn">
+            Get My Location
+        </button>
+
+        <p id="status"></p>
+
+        <div class="location-card" id="locationCard">
+
+            <div>
+                <span class="label">Latitude:</span>
+                <span class="value" id="latitude"></span>
+            </div>
+
+            <div>
+                <span class="label">Longitude:</span>
+                <span class="value" id="longitude"></span>
+            </div>
+
+            <div>
+                <span class="label">Accuracy:</span>
+                <span class="value" id="accuracy"></span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const locationBtn = document.getElementById("locationBtn");
+
+        const locationCard = document.getElementById("locationCard");
+
+        const latitude = document.getElementById("latitude");
+
+        const longitude = document.getElementById("longitude");
+
+        const accuracy = document.getElementById("accuracy");
+
+        const status = document.getElementById("status");
+
+
+        locationBtn.addEventListener("click", getLocation);
+
+
+        function getLocation() {
+
+            // Check whether browser supports Geolocation API
+
+            if (!navigator.geolocation) {
+
+                status.textContent =
+                    "Geolocation is not supported by your browser.";
+
+                return;
+            }
+
+
+            status.textContent = "Getting your location...";
+
+
+            // Geolocation Web API
+
+            navigator.geolocation.getCurrentPosition(
+                
+                showPosition,
+
+                showError
+
+            );
+        }
+
+
+        function showPosition(position) {
+
+            const latitudeValue =
+                position.coords.latitude;
+
+            const longitudeValue =
+                position.coords.longitude;
+
+            const accuracyValue =
+                position.coords.accuracy;
+
+
+            latitude.textContent =
+                latitudeValue;
+
+            longitude.textContent =
+                longitudeValue;
+
+            accuracy.textContent =
+                Math.round(accuracyValue) + " meters";
+
+
+            locationCard.style.display = "block";
+
+            status.textContent =
+                "Location found successfully!";
+
+        }
+
+
+        function showError(error) {
+
+            switch (error.code) {
+
+                case error.PERMISSION_DENIED:
+
+                    status.textContent =
+                        "Location permission was denied.";
+
+                    break;
+
+
+                case error.POSITION_UNAVAILABLE:
+
+                    status.textContent =
+                        "Location information is unavailable.";
+
+                    break;
+
+
+                case error.TIMEOUT:
+
+                    status.textContent =
+                        "Location request timed out.";
+
+                    break;
+
+
+                default:
+
+                    status.textContent =
+                        "An unknown error occurred.";
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

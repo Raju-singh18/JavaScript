@@ -1,0 +1,328 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        const text = "Raju Kumar Singh"
+        navigator.clipboard.writeText(text).then(()=>{
+            console.log("Text copied to clipboard")
+        });
+
+        navigator.clipboard.readText().then((text)=>{
+            console.log('Text from clipboard; ', text);
+        })
+    </script>
+</body>
+</html>
+ -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Clipboard API</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background: linear-gradient(
+                135deg,
+                #667eea,
+                #764ba2
+            );
+        }
+
+        .container {
+            width: 450px;
+            padding: 30px;
+
+            background: white;
+            border-radius: 20px;
+
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 130px;
+
+            padding: 15px;
+
+            border: 2px solid #ddd;
+            border-radius: 10px;
+
+            font-size: 16px;
+            resize: none;
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            flex: 1;
+
+            padding: 12px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: #667eea;
+            color: white;
+
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #5568d9;
+        }
+
+        .read-btn {
+            background: #764ba2;
+        }
+
+        .read-btn:hover {
+            background: #653c8e;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+
+            background: #f5f6ff;
+            border-radius: 10px;
+
+            display: none;
+        }
+
+        .result h3 {
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        #clipboardText {
+            color: #555;
+            word-wrap: break-word;
+        }
+
+        #message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>📋 Clipboard API</h1>
+
+        <p class="description">
+            Copy text or read text from your clipboard
+        </p>
+
+
+        <!-- Text Input -->
+
+        <textarea id="textInput"
+            placeholder="Enter text here..."></textarea>
+
+
+        <!-- Buttons -->
+
+        <div class="buttons">
+
+            <button id="copyBtn">
+                📋 Copy Text
+            </button>
+
+            <button id="readBtn" class="read-btn">
+                📥 Read Clipboard
+            </button>
+
+        </div>
+
+
+        <!-- Message -->
+
+        <p id="message"></p>
+
+
+        <!-- Clipboard Result -->
+
+        <div class="result" id="result">
+
+            <h3>Clipboard Content:</h3>
+
+            <p id="clipboardText"></p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        const textInput =
+            document.getElementById("textInput");
+
+        const copyBtn =
+            document.getElementById("copyBtn");
+
+        const readBtn =
+            document.getElementById("readBtn");
+
+        const message =
+            document.getElementById("message");
+
+        const result =
+            document.getElementById("result");
+
+        const clipboardText =
+            document.getElementById("clipboardText");
+
+
+        // ==========================================
+        // COPY TEXT TO CLIPBOARD
+        // ==========================================
+
+        copyBtn.addEventListener("click", async function () {
+
+            const text = textInput.value;
+
+            if (text.trim() === "") {
+
+                showMessage(
+                    "Please enter some text first.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            try {
+
+                await navigator.clipboard.writeText(text);
+
+                showMessage(
+                    "✅ Text copied successfully!",
+                    "success"
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    "❌ Failed to copy text.",
+                    "error"
+                );
+
+                console.error(error);
+            }
+
+        });
+
+
+        // ==========================================
+        // READ TEXT FROM CLIPBOARD
+        // ==========================================
+
+        readBtn.addEventListener("click", async function () {
+
+            try {
+
+                const text =
+                    await navigator.clipboard.readText();
+
+
+                clipboardText.textContent =
+                    text || "Clipboard is empty.";
+
+
+                result.style.display = "block";
+
+
+                showMessage(
+                    "✅ Clipboard read successfully!",
+                    "success"
+                );
+
+            } catch (error) {
+
+                showMessage(
+                    "❌ Unable to read clipboard.",
+                    "error"
+                );
+
+                console.error(error);
+            }
+
+        });
+
+
+        // ==========================================
+        // SHOW MESSAGE
+        // ==========================================
+
+        function showMessage(text, type) {
+
+            message.textContent = text;
+
+            message.className = type;
+
+        }
+
+    </script>
+
+</body>
+</html>
